@@ -9,7 +9,10 @@ coindict= {key:0 for key in coinlist}
 
 #connect and get the appropriate thread
 user_agent = "coinVote 1.0 by /u/wjhall"
-r = praw.Reddit(user_agent=user_agent)
+r = praw.Reddit(client_id = "your client_id",
+                client_secret = " your client_secret",
+                user_agent = 'my user agent')
+
 submission = r.submission(id='7mgd3g')
 
 for comment in submission.comments:
@@ -33,4 +36,15 @@ for comment in submission.comments:
 
 #remove any with nil votes and print
 votelist = {key:value for key, value in coindict.iteritems() if value!=0}
+
+# sort the dictionary to know the most voted
+votelist_sort = sorted(votelist, key=votelist.get, reverse=True)
+
 print votelist
+
+# create a file with all the votes
+fo = open("Votes.txt", "w")
+for k in votelist_sort:
+    v = votelist[str(k)]
+    fo.write("> " + str(k) + ': '+ str(v) + '\n\n')
+fo.close()
